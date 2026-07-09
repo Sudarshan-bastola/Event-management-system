@@ -1,0 +1,42 @@
+@baseUrl = http://localhost:3000
+@userId = 6a4f1357df773fd567cd5c5e
+
+### create user 1
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "sudarshan bastola",
+    "email": "sudarshan.bastola29@gmail.com",
+    "password": "Taey2%82bhb",
+    "phone": 9843233433,
+    "role": "organizer"
+}
+### create user 2
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "sudarshan bastola",
+    "email": "sudarshan.bastola3441@gmail.com",
+    "password": "Taey2%85bhb",
+    "phone": 9843233433,
+    "role": "organizer"
+}
+
+### get all users
+GET {{baseUrl}}/users
+
+### get user by id
+GET {{baseUrl}}/users/{{userId}}
+
+### update users by id
+PATCH {{baseUrl}}/users/{{userId}}
+Content-Type: application/json
+
+{
+  "name":"hello baby"
+}
+
+### delete user by id
+DELETE {{baseUrl}}/users/{{userId}}
