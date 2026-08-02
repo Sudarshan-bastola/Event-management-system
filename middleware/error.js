@@ -5,13 +5,8 @@ const errorMiddleware = (err, req, res, next) => {
     success: false,
     message: err.message || "Something went wrong",
     stack: process.env.NODE_ENV === "production" ? null : err.stack,
-    ...(err.errors?.length > 0 && {
-      errors: err.errors.map((error) => ({
-        field: error.field,
-        message: error.message,
-      })),
-    }),
+    ...(err.errors?.length > 0 && { errors: err.errors }),
   });
 };
 
-export default errorMiddleware; 
+export default errorMiddleware;

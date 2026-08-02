@@ -84,9 +84,6 @@ eventSchema.pre("save", function (next) {
     // set availableSeats equal to totalSeats by default
     this.availableSeats = this.totalSeats;
   }
-
-  // move to next step and save document, i am done
-  next();
 });
 
 

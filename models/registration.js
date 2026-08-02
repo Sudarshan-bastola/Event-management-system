@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import Event from "./event.model.js";
+import Event from "./event.js";
 
 const registrationSchema = new Schema(
   {
@@ -36,29 +36,30 @@ const registrationSchema = new Schema(
 // one user can still buy multiple tickets using numberOfTickets
 registrationSchema.index({ user: 1, event: 1 }, { unique: true });
 
-// runs before saving a registration
-registrationSchema.pre("save", async function (next) {
-  // find the event for which user is registering
+// Runs automatically before a registration document is saved
+registrationSchema.pre("save", async function () {
+
+  // Find the event using the event ID stored in this registration
   const event = await Event.findById(this.event);
 
-  // if event is not found, stop and show error
+  // If no event exists with the given ID, stop the save operation
   if (!event) {
-    return next(new Error("Event not found"));
+    throw new Error("Event not found");
   }
 
-  // check if event has enough available seats
+  // Check whether enough seats are available for the requested tickets
   if (event.availableSeats < this.numberOfTickets) {
-    return next(new Error("Not enough seats available"));
+    throw new Error("Not enough seats available");
   }
 
-  // decrease available seats by number of tickets booked
+  // Reduce the available seats by the number of tickets booked
   event.availableSeats -= this.numberOfTickets;
 
-  // save updated event document
+  // Save the updated event document with the new availableSeats value
   await event.save();
 
-  // continue and save registration document
-  next();
+  // No need to call next() because this is an async middleware.
+  // If there are no errors, Mongoose automatically continues
+  // and saves the registration document.
 });
-
 export default model("Registration", registrationSchema);

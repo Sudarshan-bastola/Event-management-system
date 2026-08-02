@@ -1,42 +1,394 @@
 @baseUrl = http://localhost:3000
-@userId = 6a4f1357df773fd567cd5c5e
 
-### create user 1
-POST {{baseUrl}}/users
+####################################################
+# VARIABLES
+####################################################
+
+@userId =
+@categoryId =
+@venueId =
+@eventId =
+@registrationId =
+@paymentId =
+@reviewId =
+
+####################################################
+# TOKENS
+####################################################
+
+@adminToken =
+@organizerToken =
+@attendeeToken =
+
+####################################################
+# AUTH (PUBLIC)
+####################################################
+
+### Register Admin
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-    "name": "sudarshan bastola",
-    "email": "sudarshan.bastola29@gmail.com",
-    "password": "Taey2%82bhb",
-    "phone": 9843233433,
-    "role": "organizer"
+    "name":"Admin",
+    "email":"admin@gmail.com",
+    "password":"Admin@123",
+    "phone":"9800000000",
+    "role":"admin"
 }
-### create user 2
-POST {{baseUrl}}/users
+
+###
+
+### Register Organizer
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-    "name": "sudarshan bastola",
-    "email": "sudarshan.bastola3441@gmail.com",
-    "password": "Taey2%85bhb",
-    "phone": 9843233433,
-    "role": "organizer"
+    "name":"Organizer",
+    "email":"organizer@gmail.com",
+    "password":"Organizer@123",
+    "phone":"9811111111",
+    "role":"organizer"
 }
 
-### get all users
+###
+
+### Register Attendee
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "name":"Attendee",
+    "email":"attendee@gmail.com",
+    "password":"Attendee@123",
+    "phone":"9822222222",
+    "role":"attendee"
+}
+
+###
+
+### Login Admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email":"admin@gmail.com",
+    "password":"Admin@123"
+}
+
+###
+
+### Login Organizer
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email":"organizer@gmail.com",
+    "password":"Organizer@123"
+}
+
+###
+
+### Login Attendee
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email":"attendee@gmail.com",
+    "password":"Attendee@123"
+}
+
+####################################################
+# USERS (ADMIN ONLY)
+####################################################
+
+### Get Users
 GET {{baseUrl}}/users
+Authorization: Bearer {{adminToken}}
 
-### get user by id
+###
+
+### Get User
 GET {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{adminToken}}
 
-### update users by id
+###
+
+### Update User
 PATCH {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{adminToken}}
 Content-Type: application/json
 
 {
-  "name":"hello baby"
+    "name":"Updated User"
 }
 
-### delete user by id
+###
+
+### Delete User
 DELETE {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{adminToken}}
+
+####################################################
+# CATEGORY
+####################################################
+
+### Create Category (ADMIN)
+POST {{baseUrl}}/categories
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "name":"Music",
+    "description":"Music Events"
+}
+
+###
+
+### Get Categories (PUBLIC)
+GET {{baseUrl}}/categories
+
+###
+
+### Get Category
+GET {{baseUrl}}/categories/{{categoryId}}
+
+###
+
+### Update Category (ADMIN)
+PATCH {{baseUrl}}/categories/{{categoryId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "name":"Concert"
+}
+
+###
+
+### Delete Category (ADMIN)
+DELETE {{baseUrl}}/categories/{{categoryId}}
+Authorization: Bearer {{adminToken}}
+
+####################################################
+# VENUE
+####################################################
+
+### Create Venue (ADMIN)
+POST {{baseUrl}}/venue
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "name":"City Hall",
+    "address":"Main Road",
+    "city":"Biratnagar",
+    "capacity":500
+}
+
+###
+
+### Get Venues (PUBLIC)
+GET {{baseUrl}}/venue
+
+###
+
+### Get Venue
+GET {{baseUrl}}/venue/{{venueId}}
+
+###
+
+### Update Venue (ADMIN)
+PATCH {{baseUrl}}/venue/{{venueId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "capacity":700
+}
+
+###
+
+### Delete Venue (ADMIN)
+DELETE {{baseUrl}}/venue/{{venueId}}
+Authorization: Bearer {{adminToken}}
+
+####################################################
+# EVENTS
+####################################################
+
+### Create Event (ORGANIZER)
+POST {{baseUrl}}/events
+Authorization: Bearer {{organizerToken}}
+Content-Type: application/json
+
+{
+    "title":"Tech Conference",
+    "description":"Annual technology conference",
+    "category":"{{categoryId}}",
+    "venue":"{{venueId}}",
+    "eventDate":"2026-08-20",
+    "startTime":"10:00 AM",
+    "endTime":"04:00 PM",
+    "ticketPrice":500,
+    "totalSeats":100,
+    "image":"https://example.com/image.jpg",
+    "status":"Upcoming"
+}
+
+###
+
+### Get Events (PUBLIC)
+GET {{baseUrl}}/events
+
+###
+
+### Get Event
+GET {{baseUrl}}/events/{{eventId}}
+
+###
+
+### Update Event (ORGANIZER)
+PATCH {{baseUrl}}/events/{{eventId}}
+Authorization: Bearer {{organizerToken}}
+Content-Type: application/json
+
+{
+    "ticketPrice":800
+}
+
+###
+
+### Delete Event (ORGANIZER)
+DELETE {{baseUrl}}/events/{{eventId}}
+Authorization: Bearer {{organizerToken}}
+
+####################################################
+# REGISTRATION
+####################################################
+
+### Create Registration (ATTENDEE)
+POST {{baseUrl}}/registrations
+Authorization: Bearer {{attendeeToken}}
+Content-Type: application/json
+
+{
+    "event":"{{eventId}}",
+    "numberOfTickets":2
+}
+
+###
+
+### My Registrations (ATTENDEE)
+GET {{baseUrl}}/registrations
+Authorization: Bearer {{attendeeToken}}
+
+###
+
+### Registration By Id (ATTENDEE)
+GET {{baseUrl}}/registrations/{{registrationId}}
+Authorization: Bearer {{attendeeToken}}
+
+###
+
+### Update Registration (ATTENDEE)
+PATCH {{baseUrl}}/registrations/{{registrationId}}
+Authorization: Bearer {{attendeeToken}}
+Content-Type: application/json
+
+{
+    "numberOfTickets":3
+}
+
+###
+
+### Delete Registration (ATTENDEE)
+DELETE {{baseUrl}}/registrations/{{registrationId}}
+Authorization: Bearer {{attendeeToken}}
+
+####################################################
+# PAYMENT
+####################################################
+
+### Create Payment (ATTENDEE)
+POST {{baseUrl}}/payments
+Authorization: Bearer {{attendeeToken}}
+Content-Type: application/json
+
+{
+    "registration":"{{registrationId}}",
+    "amount":1000,
+    "paymentMethod":"eSewa",
+    "transactionId":"ESW123456"
+}
+
+###
+
+### My Payments (ATTENDEE)
+GET {{baseUrl}}/payments
+Authorization: Bearer {{attendeeToken}}
+
+###
+
+### Payment By Id (ATTENDEE)
+GET {{baseUrl}}/payments/{{paymentId}}
+Authorization: Bearer {{attendeeToken}}
+
+###
+
+### Update Payment (ATTENDEE)
+PATCH {{baseUrl}}/payments/{{paymentId}}
+Authorization: Bearer {{attendeeToken}}
+Content-Type: application/json
+
+{
+    "paymentStatus":"Paid"
+}
+
+###
+
+### Delete Payment (ATTENDEE)
+DELETE {{baseUrl}}/payments/{{paymentId}}
+Authorization: Bearer {{attendeeToken}}
+
+####################################################
+# REVIEW
+####################################################
+
+### Create Review (ATTENDEE)
+POST {{baseUrl}}/reviews
+Authorization: Bearer {{attendeeToken}}
+Content-Type: application/json
+
+{
+    "event":"{{eventId}}",
+    "rating":5,
+    "comment":"Excellent event!"
+}
+
+###
+
+### Get Reviews (PUBLIC)
+GET {{baseUrl}}/reviews
+
+###
+
+### Get Review
+GET {{baseUrl}}/reviews/{{reviewId}}
+
+###
+
+### Update Review (ATTENDEE)
+PATCH {{baseUrl}}/reviews/{{reviewId}}
+Authorization: Bearer {{attendeeToken}}
+Content-Type: application/json
+
+{
+    "rating":4,
+    "comment":"Very good event."
+}
+
+###
+
+### Delete Review (ATTENDEE)
+DELETE {{baseUrl}}/reviews/{{reviewId}}
+Authorization: Bearer {{attendeeToken}}

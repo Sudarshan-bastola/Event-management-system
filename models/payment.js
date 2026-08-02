@@ -6,6 +6,7 @@ const paymentSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Registration",
       required: [true, "Registration is required"],
+      unique: true, // one payment per registration
     },
 
     amount: {
@@ -53,6 +54,10 @@ const paymentSchema = new Schema(
 
 
     },
-  });
+  },
+  {
+    timestamps: true,
+  }
+);
 
 export default model("Payment", paymentSchema);
